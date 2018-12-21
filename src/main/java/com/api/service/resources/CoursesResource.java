@@ -27,6 +27,7 @@ public class CoursesResource {
     @Produces(MediaType.APPLICATION_JSON)
     public static Corso delete(Corso course){
         //todo handle null - need id as well
+
         return CorsoDAO.delete(course);
     }
 
