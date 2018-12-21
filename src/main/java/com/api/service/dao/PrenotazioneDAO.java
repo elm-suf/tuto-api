@@ -3,12 +3,7 @@ package com.api.service.dao;
 import com.db.DBConnection;
 import com.db.model.Prenotazione;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,47 +33,26 @@ public class PrenotazioneDAO {
     }
 
 
-    /**
-     * PUT        http:/students/{student}/{teacher}/{course}/{slot}/{date}
-     * add a new reservation
-     * method : put,
-     * params {
-     * "studente" : "studente",
-     * "docente" : "mariolindo",
-     * "corso" : "prog",
-     * "slot" : "4",
-     * "data" : "2018-12-31",
-     * "stato" : "attiva",
-     * "insegnamento" : "1"
-     * };
-     *
-     * @param pren dkshbf vhsdbvk
-     * @return fasuhfd sdbvsd;
-     * @throws SQLException
-     */
-    @PUT
-    @Produces(MediaType.APPLICATION_JSON)
-    @Path("/reservations/{student}/{teacher}/{course}/{slot}/{date}")
-    public static int insert(Prenotazione pren) {
+    public static Prenotazione insert(Prenotazione pren) throws SQLException {
 
         //todo learn about @QueryParam annotation - Reactive Streams
         String sql = "INSERT INTO prenotazione(studente, stato, docente, corso, slot, data) VALUES  (?,?,?,?,?,?)";
         PreparedStatement st = null;
         Connection conn = DBConnection.getInstance();
-        try {
-            st = conn.prepareStatement(sql);
-            st.setString(1, pren.getStato());
-            st.setString(2, pren.getStudente());
-            st.setString(3, pren.getDocente());
-            st.setString(4, pren.getSlot());
-            st.setString(5, pren.getData());
-            st.setString(6, pren.getCorso());
-            //todo non capisco perche hai rimosso corso
-            System.out.println("Query : " + st.toString());
-            return st.executeUpdate();
+        st = conn.prepareStatement(sql);
+        st.setString(1, pren.getStudente());
+        st.setString(2, pren.getStato());
+        st.setString(3, pren.getDocente());
+        st.setString(4, pren.getCorso());
+        st.setString(5, pren.getSlot());
+        st.setString(6, pren.getData());
+        System.out.println("Query : " + st.toString());
+        int affected = st.executeUpdate();
 
-        } catch (SQLException e) {
-            return -1;
+        if (affected > 0) {
+            return pren;
+        } else {
+            throw new SQLDataException("no rows affected");
         }
     }
 
@@ -148,7 +122,7 @@ public class PrenotazioneDAO {
         List list = new ArrayList<Prenotazione>();
         List<Prenotazione> list1 = new ArrayList<>(); //todo forse e' meglio usare int
         for (int i = 1; i < 5; i++) {
-            list1.add(new Prenotazione(String.valueOf(i),"available"));
+            list1.add(new Prenotazione(String.valueOf(i), "available"));
         }
 
         st = conn.prepareStatement(sql);
