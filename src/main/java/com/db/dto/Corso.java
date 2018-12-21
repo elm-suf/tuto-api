@@ -13,6 +13,11 @@ public class Corso {
         this.titolo = titolo;
     }
 
+    public Corso(int id, String titolo) {
+        this.id = id;
+        this.titolo = titolo;
+    }
+
     public int getId(){
         return id;
     }

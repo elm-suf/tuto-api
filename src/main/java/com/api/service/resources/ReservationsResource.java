@@ -52,7 +52,7 @@ public class ReservationsResource {
 
         int rowsAffected = PrenotazioneDAO.insert(new Prenotazione(student, teacher, course, slot, "attiva", date));
 
-        //todo Handling errors
+        //todo Handling errors HTTP-messages
 
 //        if (rowsAffected > 0){
         return rowsAffected;

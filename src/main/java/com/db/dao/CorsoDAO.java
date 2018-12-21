@@ -16,92 +16,149 @@ import java.util.List;
 
 
 
-//@Consumes(MediaType.APPLICATION_JSON)
-//@Produces(MediaType.APPLICATION_JSON)
-@Path("/courses")
 public class CorsoDAO {
 
-    @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    public static List<Corso> getAll() throws SQLException { //todo non capisco perche sta select torna anche gli id
-        String getAll = "SELECT titolo FROM corso";
-        PreparedStatement st = null;
+    public static List<Corso> getAll() {
         Connection conn = DBConnection.getInstance();
+        String getAll = "SELECT * FROM corso";
+        PreparedStatement st = null;
+        ArrayList<Corso> c = null;
         try {
             st = conn.prepareStatement(getAll);
-            ArrayList<Corso> c = new ArrayList<>();
+            c = new ArrayList<>();
+            System.out.println();
             ResultSet rs = st.executeQuery();
             while (rs.next()) {
-                Corso s = new Corso(rs.getString("titolo"));
+                Corso s = new Corso(rs.getInt("id"),rs.getString("titolo"));
                 c.add(s);
             }
-            return c;
-        } finally {
-            if (st != null) st.close();
-            if (conn != null) conn.close();
+
+            st.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return c;
     }
 
-    public static int insert(Corso c) throws SQLException {
+    public static Corso insert(Corso c) {
         String insert = "INSERT INTO corso(titolo) VALUES(?)";
         PreparedStatement st = null;
         Connection conn = DBConnection.getInstance();
         try {
             st = conn.prepareStatement(insert);
             st.setString(1, c.getTitolo());
-            return st.executeUpdate();
-
-        }catch (Exception e){
+            System.out.println("CorsoDao Query: " + st.toString());
+            st.executeUpdate();
+            st.close();
+            conn.close();
+        } catch (Exception e) {
             //catturo l'eccezione che potrebbe essere generata e ritorno immediatamente -1 error.
-            return -1;
-        } finally {
-            if (st != null) st.close();
-            if (conn != null) conn.close();
+            return null;
         }
+        return c;
     }
 
-    public static void delete(Corso c) throws SQLException {
+    public static Corso delete(Corso c) {
         String remove = "DELETE FROM corso WHERE titolo = ?";
-        PreparedStatement st = null;
         Connection conn = DBConnection.getInstance();
+        PreparedStatement st = null;
         try {
             st = conn.prepareStatement(remove);
             st.setString(1, c.getTitolo());
-            System.out.println(st.toString());
+            System.out.println("CorsoDao Query: " + st.toString());
             st.executeUpdate();
-        }finally {
-            if (st != null) st.close();
-            if (conn != null) conn.close();
+            st.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
+        return c;
     }
 
-    public static void update(String titoloInit, String titoloFinal) throws SQLException {
-        String modify = "UPDATE corso SET titolo = ? WHERE titolo = ?";
+    public static Corso update(Corso corso) {
+        String modify = "UPDATE corso SET titolo = ? WHERE id = ?";
         PreparedStatement st = null;
         Connection conn = DBConnection.getInstance();
         try {
             st = conn.prepareStatement(modify);
-            st.setString(1, titoloFinal);
-            st.setString(2, titoloInit);
+            st.setString(1, corso.getTitolo());
+            st.setInt(2, corso.getId());
+            System.out.println("CorsoDao Query: " + st.toString());
             st.executeUpdate();
-        }finally {
-            if (st != null) st.close();
-            if (conn != null) conn.close();
+
+            st.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
         }
+        return corso;
     }
 
-    public static int getN() throws SQLException {
+    public static int getN() {
+        Connection conn = DBConnection.getInstance();
         String getN = "SELECT count(*) FROM corso";
         PreparedStatement st = null;
-        Connection conn = DBConnection.getInstance();
+        int count = 0;
         try {
             st = conn.prepareStatement(getN);
+            System.out.println("CorsoDao Query: " + st.toString());
             ResultSet rs = st.executeQuery();
             rs.next();
-            return rs.getInt(1);
-        }finally {
-            if (st != null) st.close();
-            if (conn != null) conn.close();
+            count = rs.getInt(1);
+
+            st.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return count;
         }
+        return count;
+    }
+
+    public static Corso getCorso(String title) {
+        String remove = "SELECT * FROM corso WHERE titolo = ?";
+        Connection conn = DBConnection.getInstance();
+        PreparedStatement st = null;
+        Corso result = null;
+        try {
+            st = conn.prepareStatement(remove);
+            st.setString(1, title);
+            System.out.println("CorsoDao Query: " + st.toString());
+            ResultSet rs = st.executeQuery();
+            if (rs.next()){
+                result = new Corso(rs.getInt("id"),rs.getString("titolo"));
+            }
+            st.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return result;
+    }
+
+    public static Corso getCorsoById(int id) {
+        String remove = "SELECT * corso WHERE id = ?";
+        Connection conn = DBConnection.getInstance();
+        PreparedStatement st = null;
+        Corso result = null;
+        try {
+            st = conn.prepareStatement(remove);
+            st.setInt(1, id);
+            System.out.println("CorsoDao Query: " + st.toString());
+            ResultSet rs = st.executeQuery();
+            if (rs.next()){
+                result = new Corso(rs.getInt("id"),rs.getString("titolo"));
+            }
+            st.close();
+            conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return result;
     }
 }

@@ -1140,6 +1140,8 @@ docente</ColNames>
       <RefSchemaName>ripetizioni</RefSchemaName>
       <RefTableName>corso</RefTableName>
       <RefColNames>titolo</RefColNames>
+      <OnUpdate>cascade</OnUpdate>
+      <OnDelete>cascade</OnDelete>
     </foreign-key>
     <foreign-key id="279" parent="246" name="insegnamneto_professore_username_fk">
       <ColNames>docente</ColNames>
