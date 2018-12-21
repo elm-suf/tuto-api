@@ -1,7 +1,7 @@
-package com.api.service.resources;
+package com.api.resources;
 
-import com.db.dao.CorsoDAO;
-import com.db.dto.Corso;
+import com.api.service.dao.CorsoDAO;
+import com.db.model.Corso;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -27,7 +27,6 @@ public class CoursesResource {
     @Produces(MediaType.APPLICATION_JSON)
     public static Corso delete(Corso course){
         //todo handle null - need id as well
-
         return CorsoDAO.delete(course);
     }
 

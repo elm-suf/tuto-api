@@ -1,4 +1,4 @@
-package com.db.dto;
+package com.db.model;
 
 public class Prenotazione {
     private int id;
@@ -10,6 +10,11 @@ public class Prenotazione {
     private String data;
 
     public Prenotazione(){}
+
+    public Prenotazione(String slot, String stato) {
+        this.slot = slot;
+        this.stato = stato;
+    }
 
     public Prenotazione(String studente, String docente, String corso, String slot, String stato, String data){
         this.studente = studente;

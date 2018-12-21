@@ -1,4 +1,4 @@
-package com.db.dto;
+package com.db.model;
 
 import javax.xml.bind.annotation.*;
 

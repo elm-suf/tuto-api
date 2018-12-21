@@ -1,12 +1,8 @@
-package com.db.dao;
+package com.api.service.dao;
 
 import com.db.DBConnection;
-import com.db.dto.Corso;
+import com.db.model.Corso;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

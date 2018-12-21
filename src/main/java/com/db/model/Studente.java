@@ -1,4 +1,4 @@
-package com.db.dto;
+package com.db.model;
 
 public class Studente {
     private int id;

@@ -1,10 +1,8 @@
-package com.api.service.resources;
+package com.api.resources;
 
 
-import com.db.dao.DocenteDAO;
-import com.db.dao.PrenotazioneDAO;
-import com.db.dto.Docente;
-import com.db.dto.Prenotazione;
+import com.api.service.dao.PrenotazioneDAO;
+import com.db.model.Prenotazione;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

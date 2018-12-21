@@ -1,4 +1,4 @@
-package com.api.service.resources;
+package com.api.resources;
 
 
 import javax.ws.rs.GET;

@@ -1,12 +1,8 @@
-package com.db.dao;
+package com.api.service.dao;
 
 import com.db.DBConnection;
-import com.db.dto.Docente;
+import com.db.model.Docente;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,27 +11,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-
 public class DocenteDAO {
 
-    public DocenteDAO() {}
+    public DocenteDAO() {
+    }
 
 
-    public static List<Docente> getAll() {
+    public static List<Docente> getAll() throws SQLException {
         String getAll = "SELECT username, password, nome, cognome FROM docente";
-        List<Docente> stud = null;
-        PreparedStatement st = null;
         Connection conn = DBConnection.getInstance();
-        try {
-            st = conn.prepareStatement(getAll);
-            stud = new ArrayList<>();
-            ResultSet rs = st.executeQuery();
-            while (rs.next()) {
-                Docente s = new Docente(rs.getString("username"), rs.getString("password"), rs.getString("nome"), rs.getString("cognome"));
-                stud.add(s);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        PreparedStatement st = null;
+        List<Docente> stud = null;
+        stud = new ArrayList<>();
+        st = conn.prepareStatement(getAll);
+        System.out.println("DocenteDao Query: " + st.toString());
+        ResultSet rs = st.executeQuery();
+        while (rs.next()) {
+            Docente s = new Docente(rs.getString("username"), rs.getString("password"), rs.getString("nome"), rs.getString("cognome"));
+            stud.add(s);
         }
         return stud;
     }
@@ -51,12 +44,9 @@ public class DocenteDAO {
             st.setString(2, user.getNome());
             st.setString(3, user.getCognome());
             st.setString(4, user.getPassword());
+            System.out.println("DocenteDao Query: " + st.toString());
 
             return st.executeUpdate();
-
-        }catch (Exception e){
-            //catturo l'eccezione che potrebbe essere generata e ritorno immediatamente -1 error.
-            return -1;
         } finally {
             if (st != null) st.close();
             if (conn != null) conn.close();
@@ -71,6 +61,7 @@ public class DocenteDAO {
         try {
             st = conn.prepareStatement(sqlDelete);
             st.setString(1, user.getUsername());
+            System.out.println("DocenteDao Query: " + st.toString());
 
             st.executeUpdate();
         } finally {
@@ -79,18 +70,23 @@ public class DocenteDAO {
         }
     }
 
-    public static void update(Docente user) throws SQLException {
+    public static Docente update(Docente user) throws SQLException {
         String sqlUpdate = "UPDATE docente SET nome = ?, cognome = ? WHERE username= ?";
         PreparedStatement st = null;
         Connection conn = DBConnection.getInstance();
+        Docente docente = null;
 
         try {
             st = conn.prepareStatement(sqlUpdate);
             st.setString(1, user.getNome());
             st.setString(2, user.getCognome());
             st.setString(3, user.getUsername());
+            System.out.println("DocenteDao Query: " + st.toString());
 
-            st.executeUpdate();
+            int i = st.executeUpdate();
+            if (i > 0) {
+                return user;
+            } else return null;
         } finally {
             if (st != null) st.close();
             if (conn != null) conn.close();
@@ -104,6 +100,8 @@ public class DocenteDAO {
         Connection conn = DBConnection.getInstance();
         try {
             st = conn.prepareStatement(getN);
+            System.out.println("DocenteDao Query: " + st.toString());
+
             ResultSet rs = st.executeQuery();
             rs.next();
             return rs.getInt(1);
@@ -128,6 +126,8 @@ public class DocenteDAO {
 
         st = conn.prepareStatement(sql);
         st.setString(1, corso);
+        System.out.println("DocenteDao Query: " + st.toString());
+
         ResultSet rs = st.executeQuery();
 
         while (rs.next()) {
@@ -189,4 +189,23 @@ public class DocenteDAO {
 //
 
     }
+
+    public static Docente getByUsername(String username) throws SQLException {
+        String sql = "SELECT * FROM docente WHERE username = ?";
+        Connection conn = DBConnection.getInstance();
+        PreparedStatement st;
+        Docente response = null;
+        ResultSet rs;
+
+        st = conn.prepareStatement(sql);
+        st.setString(1, username);
+        System.out.println("DocenteDao query :" + st.toString());
+        rs = st.executeQuery();
+        if (rs.next()) {
+            response = new Docente(rs.getInt("id"), rs.getString("username"), rs.getString("password"), rs.getString("nome"), rs.getString("cognome"));
+        }
+
+        return response;
+    }
 }
+

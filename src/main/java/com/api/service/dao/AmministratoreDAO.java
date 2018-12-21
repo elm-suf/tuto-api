@@ -1,7 +1,7 @@
-package com.db.dao;
+package com.api.service.dao;
 
 import com.db.DBConnection;
-import com.db.dto.Amministratore;
+import com.db.model.Amministratore;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

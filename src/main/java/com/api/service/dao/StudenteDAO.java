@@ -1,7 +1,7 @@
-package com.db.dao;
+package com.api.service.dao;
 
 import com.db.DBConnection;
-import com.db.dto.Studente;
+import com.db.model.Studente;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

@@ -1,4 +1,4 @@
-package com.db.dto;
+package com.db.model;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
@@ -17,6 +17,14 @@ public class Docente {
 
     public Docente(String username, String nome, String cognome, String password) {
         insegnamento = new ArrayList<>();
+        this.username = username;
+        this.nome = nome;
+        this.cognome = cognome;
+        this.password = password;
+    }
+
+    public Docente(int id, String username, String password, String nome, String cognome) {
+        this.id = id;
         this.username = username;
         this.nome = nome;
         this.cognome = cognome;

@@ -1,7 +1,7 @@
-package com.db.dao;
+package com.api.service.dao;
 
 import com.db.DBConnection;
-import com.db.dto.Prenotazione;
+import com.db.model.Prenotazione;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -141,35 +141,31 @@ public class PrenotazioneDAO {
         }
     }
 
-    public static List getSlotDisponibili(String docente, String data) {
-        //todo in realta' mi serve solo slot e lo stato
+    public static List<Prenotazione> getSlotDisponibili(String docente, String data) throws SQLException {
         String sql = "SELECT slot,stato FROM prenotazione WHERE docente = ? and data = ?";
         PreparedStatement st = null;
         Connection conn = DBConnection.getInstance();
         List list = new ArrayList<Prenotazione>();
-        List<String> active = new ArrayList<>(); //todo forse e' meglio usare int
-        active.add("1");
-        active.add("2");
-        active.add("3");
-        active.add("4");
-        try {
-            st = conn.prepareStatement(sql);
-            st.setString(1, docente);
-            st.setString(2, data);
-            ResultSet rs = st.executeQuery();
-            System.out.println("executing following query\n" + st.toString());
-            while (rs.next()) {
-                String stato = rs.getString("stato");
-                String slot = rs.getString("slot");
-
-                if (stato.equals("attiva")) {
-                    active.remove(slot);
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        List<Prenotazione> list1 = new ArrayList<>(); //todo forse e' meglio usare int
+        for (int i = 1; i < 5; i++) {
+            list1.add(new Prenotazione(String.valueOf(i),"available"));
         }
-        return active;
+
+        st = conn.prepareStatement(sql);
+        st.setString(1, docente);
+        st.setString(2, data);
+        System.out.println("PrenotazioneDao query:\n" + st.toString());
+        ResultSet rs = st.executeQuery();
+        while (rs.next()) {
+            String stato = rs.getString("stato");
+            String slot = rs.getString("slot");
+
+            if (stato.equals("attiva")) {
+                stato = "not available";
+            }
+            list1.set(Integer.parseInt(slot) - 1, new Prenotazione(slot, stato));
+        }
+        return list1;
     }
 
     public static List<Prenotazione> getAllPrenotazioniUtente(String studente) {

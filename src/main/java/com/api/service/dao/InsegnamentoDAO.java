@@ -1,8 +1,8 @@
-package com.db.dao;
+package com.api.service.dao;
 
 import com.db.DBConnection;
-import com.db.dto.Docente;
-import com.db.dto.Corso;
+import com.db.model.Docente;
+import com.db.model.Corso;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
